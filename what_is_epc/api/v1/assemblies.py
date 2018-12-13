@@ -5,7 +5,9 @@ from flask_restful import Api, Resource
 from ...commons import exceptions
 from ...extensions import db
 from ...models import AssemblyGroups, VehicleAssemblyGroups, Vehicles
-from . import OpException, OpSuccess
+from . import OpException, OpSuccess, USER_ROLE
+from .users import check_identity
+from flask_jwt_extended import jwt_required
 
 bp = Blueprint('assemblies', __name__)
 api = Api(bp)
@@ -19,6 +21,8 @@ class TestApi(Resource):
 
 @api.resource('/')
 class AssemblyGroupsApi(Resource):
+    @jwt_required
+    @check_identity(roles=USER_ROLE['PERM'])
     def get(self):
         try:
             arg = request.args['assembly_id']
@@ -52,6 +56,8 @@ class OemApi(Resource):
 
 @api.resource('/vehicles')
 class matchVehiclesApi(Resource):
+    @jwt_required
+    @check_identity(roles=USER_ROLE['PERM'])
     def get(self):
         try:
             arg = request.args['assembly_id']

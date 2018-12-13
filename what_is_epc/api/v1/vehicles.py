@@ -3,12 +3,14 @@ import os
 from flask import Blueprint, request
 from flask_restful import Api, Resource
 from ...commons import exceptions
-from . import OpSuccess, OpException
+from . import OpSuccess, OpException, USER_ROLE
 from ...extensions import db
 from ...models import Vehicles, VehicleAssemblyGroups, AssemblyGroups
 import csv
 import tempfile
 import chardet
+from .users import check_identity
+from flask_jwt_extended import jwt_required
 
 bp = Blueprint('vehicles', __name__)
 api = Api(bp)
@@ -44,6 +46,8 @@ class VehiclesApi(Resource):
     def get(self):
         pass
 
+    @jwt_required
+    @check_identity(roles=USER_ROLE['ADM'])
     def post(self):
         try:
             file = request.files['file']
