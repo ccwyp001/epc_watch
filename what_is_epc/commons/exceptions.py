@@ -104,7 +104,7 @@ class UserDoesNotExist(BaseException):
 
 
 class UserAlreadyExist(BaseException):
-    http_code = httpcodes.HTTP_404_NOT_FOUND
+    http_code = httpcodes.HTTP_400_BAD_REQUEST
     business_code = '102002'
     message = '用户已存在'
 

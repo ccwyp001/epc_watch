@@ -11,7 +11,8 @@ class Config:
     # JWT SETTING
     JWT_HEADER_NAME = 'Authorization'
     JWT_HEADER_TYPE = 'EpcWatch'
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
+    JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(minutes=60)
+    JWT_REFRESH_TOKEN_EXPIRES = datetime.timedelta(weeks=4)
     # RESTFUL SETTING
     ERROR_404_HELP = False
     # SQLALCHEMY SETTING
