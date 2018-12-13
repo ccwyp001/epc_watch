@@ -8,6 +8,7 @@ from ...extensions import db
 from ...models import Vehicles, VehicleAssemblyGroups, AssemblyGroups
 import csv
 import tempfile
+import chardet
 
 bp = Blueprint('vehicles', __name__)
 api = Api(bp)
@@ -17,9 +18,15 @@ AssemblyGMenu = ['outer_teething_wheel', 'inner_teething_wheel', 'length',
                  'abs', 'material_number']
 VAGMenu = ['assembly_group_id', 'side', 'oe_numbers', 'other_numbers']
 
+def str_coding(f):
+    with open(f, 'rb') as _:
+        _str = _.read()
+    return chardet.detect(_str)['encoding']
+
 
 def csv_read(csv_file):
-    with open(csv_file) as f:
+    encoding = str_coding(csv_file)
+    with open(csv_file, encoding=encoding) as f:
         reader = csv.reader(f, delimiter=",")
         l = ['manufacturer', 'brand', 'model', 'displacement', 'years', 'mode',
              'side', 'oe_numbers', 'other_numbers',
@@ -29,7 +36,6 @@ def csv_read(csv_file):
         for line in reader:
             d = dict(zip(l, line))
             n.append(d)
-            # print(line)
     return n
 
 
