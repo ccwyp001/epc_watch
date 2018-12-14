@@ -22,7 +22,7 @@ class BrandApi(Resource):
     def get(self):
         try:
             brands = db.session.query(db.distinct(Vehicles.brand)).all()
-            return OpSuccess(brands)
+            return OpSuccess([_[0] for _ in brands])
         except Exception as e:
             return OpException(exceptions.DataValidateError())
         finally:
