@@ -21,9 +21,9 @@ class ModelsApi(Resource):
     def get(self):
         try:
             arg = request.args['manufacturer']
-            _ = db.session.query(
+            r_list = db.session.query(
                 db.distinct(Vehicles.model)).filter(Vehicles.manufacturer == arg).all()
-            return OpSuccess(_)
+            return OpSuccess([_[0] for _ in r_list])
         except Exception as e:
             return OpException(exceptions.DataValidateError())
         finally:

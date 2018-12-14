@@ -22,9 +22,9 @@ class ManufacturersApi(Resource):
     def get(self):
         try:
             arg = request.args['brand']
-            _ = db.session.query(
+            r_list = db.session.query(
                 db.distinct(Vehicles.manufacturer)).filter(Vehicles.brand == arg).all()
-            return OpSuccess(_)
+            return OpSuccess([_[0] for _ in r_list])
         except Exception as e:
             return OpException(exceptions.DataValidateError())
         finally:
