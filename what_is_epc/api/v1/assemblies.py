@@ -45,7 +45,7 @@ class OemApi(Resource):
             v_list = VehicleAssemblyGroups.query.filter(
                 VehicleAssemblyGroups.assembly_group_id == arg).with_entities(
                 VehicleAssemblyGroups.oe_numbers).distinct().all()
-            return OpSuccess([_.oe_numbers for _ in v_list])
+            return OpSuccess([_.oe_numbers for _ in v_list if _.oe_numbers])
         except Exception as e:
             print(str(e))
             return OpException(exceptions.DataValidateError())
