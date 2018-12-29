@@ -28,6 +28,7 @@ def str_coding(f):
 
 def csv_read(csv_file):
     encoding = str_coding(csv_file)
+    encoding = [encoding, 'gbk'][encoding == 'GB2312']
     with open(csv_file, encoding=encoding) as f:
         reader = csv.reader(f, delimiter=",")
         l = ['manufacturer', 'brand', 'model', 'displacement', 'years', 'mode',
