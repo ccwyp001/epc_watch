@@ -18,7 +18,8 @@ class AssemblyGroups(db.Model):
         return {"outer_teething_wheel": self.outer_teething_wheel,
                 "inner_teething_wheel": self.inner_teething_wheel,
                 "length": self.length,
-                "abs": self.abs}
+                "abs": self.abs,
+                "material_number": self.material_number}
 
 
 class VehicleAssemblyGroups(db.Model):

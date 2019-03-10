@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 import os
 
 from flask import Blueprint, request
-from flask_restful import Api, Resource
+from flask_restful import Api, Resource, current_app
 from ...commons import exceptions
 from . import OpSuccess, OpException, USER_ROLE
 from ...extensions import db
@@ -11,6 +12,8 @@ import tempfile
 import chardet
 from .users import check_identity
 from flask_jwt_extended import jwt_required
+from ..vin_code import vin_show
+import json
 
 bp = Blueprint('vehicles', __name__)
 api = Api(bp)
@@ -19,6 +22,7 @@ VehicleMenu = ['manufacturer', 'brand', 'model', 'displacement', 'years', 'mode'
 AssemblyGMenu = ['outer_teething_wheel', 'inner_teething_wheel', 'length',
                  'abs', 'material_number']
 VAGMenu = ['assembly_group_id', 'side', 'oe_numbers', 'other_numbers']
+
 
 def str_coding(f):
     with open(f, 'rb') as _:
@@ -40,6 +44,26 @@ def csv_read(csv_file):
             d = dict(zip(l, line))
             n.append(d)
     return n
+
+
+@api.resource('/')
+class VehiclesFeatureApi(Resource):
+    def get(self):
+        try:
+            arg = request.args['vincode']
+            appcode = current_app.config['VIN_PARSE_APP_CODE']
+            url = current_app.config['VIN_PARSE_APP_URL']
+            stat, header, content = vin_show(url, appcode, arg)
+            if stat != 200:
+                return OpException(exceptions.QueryFail('查询失败，请确认vin码'))
+            result = json.loads(content)['showapi_res_body']
+            map_list = {'manufacturer': 'manufacturer',
+                 'brand': 'brand_name',
+                 'models': 'model_name'}
+            _ = {key:result.get(value) for key,value in map_list.items()}
+            return OpSuccess(_)
+        except:
+            return OpException(exceptions.QueryFail('查询失败，请确认vin码'))
 
 
 @api.resource('/csv')

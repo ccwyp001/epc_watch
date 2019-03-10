@@ -47,7 +47,23 @@ class OemApi(Resource):
                 VehicleAssemblyGroups.oe_numbers).distinct().all()
             return OpSuccess([_.oe_numbers for _ in v_list if _.oe_numbers])
         except Exception as e:
-            print(str(e))
+            # print(str(e))
+            return OpException(exceptions.DataValidateError())
+        finally:
+            if 'db' in locals():
+                db.session.close()
+
+@api.resource('/other_numbers')
+class OthmApi(Resource):
+    def get(self):
+        try:
+            arg = request.args['assembly_id']
+            v_list = VehicleAssemblyGroups.query.filter(
+                VehicleAssemblyGroups.assembly_group_id == arg).with_entities(
+                VehicleAssemblyGroups.other_numbers).distinct().all()
+            return OpSuccess([_.other_numbers for _ in v_list if _.other_numbers])
+        except Exception as e:
+            # print(str(e))
             return OpException(exceptions.DataValidateError())
         finally:
             if 'db' in locals():
@@ -98,6 +114,26 @@ class AssemblyByOemApi(Resource):
             if 'db' in locals():
                 db.session.close()
 
+@api.resource('/othm/_search')
+class AssemblyByOthmApi(Resource):
+    def get(self):
+        try:
+            arg = request.args['q']
+            rule = VehicleAssemblyGroups.other_numbers.like('%%%s%%' % arg)
+
+            v_list = VehicleAssemblyGroups.query.filter(rule).with_entities(
+                VehicleAssemblyGroups.other_numbers,
+                VehicleAssemblyGroups.assembly_group_id).distinct().all()
+            return OpSuccess(
+                [{'other_number': _.other_numbers,
+                  'assembly_id': _.assembly_group_id} for _ in v_list])
+        except Exception as e:
+            # print(str(e))
+            return OpException(exceptions.DataValidateError())
+        finally:
+            if 'db' in locals():
+                db.session.close()
+
 
 @api.resource('/_search')
 class SearchApi(Resource):
@@ -109,7 +145,24 @@ class SearchApi(Resource):
             return OpSuccess(
                 [_.id for _ in v_list])
         except Exception as e:
-            print(str(e))
+            # print(str(e))
+            return OpException(exceptions.DataValidateError())
+        finally:
+            if 'db' in locals():
+                db.session.close()
+
+@api.resource('/matm/_search')
+class AssemblyByMatmApi(Resource):
+    def get(self):
+        try:
+            arg = request.args['q']
+            rule = AssemblyGroups.material_number.like('%%%s%%' % arg)
+            v_list = AssemblyGroups.query.filter(rule).all()
+            return OpSuccess(
+                [{'material_number': _.material_number,
+                  'assembly_id': _.id} for _ in v_list])
+        except Exception as e:
+            # print(str(e))
             return OpException(exceptions.DataValidateError())
         finally:
             if 'db' in locals():

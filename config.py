@@ -19,7 +19,10 @@ class Config:
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JSON_AS_ASCII = False
-
+    IMG_2_VIN_APP_CODE = ''
+    IMG_2_VIN_APP_URL = ''
+    VIN_PARSE_APP_CODE = ''
+    VIN_PARSE_APP_URL = ''
 
 
 class DevelopmentConfig(Config):
