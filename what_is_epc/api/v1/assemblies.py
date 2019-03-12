@@ -72,8 +72,6 @@ class OthmApi(Resource):
 
 @api.resource('/vehicles')
 class matchVehiclesApi(Resource):
-    @jwt_required
-    @check_identity(roles=USER_ROLE['PERM'])
     def get(self):
         try:
             arg = request.args['assembly_id']
