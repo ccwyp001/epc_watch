@@ -58,11 +58,16 @@ class VehiclesFeatureApi(Resource):
                 return OpException(exceptions.QueryFail('查询失败，请确认vin码'))
             result = json.loads(content)['showapi_res_body']
             map_list = {'manufacturer': 'manufacturer',
-                 'brand': 'brand_name',
-                 'models': 'model_name'}
-            _ = {key:result.get(value) for key,value in map_list.items()}
+                        'brand': 'brand_name',
+                        'models': 'model_name',
+                        'displacement': 'output_volume',
+                        'years':'year',
+                        'mode':'transmission_type'
+                        }
+            _ = {key: result.get(value) for key, value in map_list.items()}
             return OpSuccess(_)
-        except:
+        except Exception as e:
+            # print(str(e))
             return OpException(exceptions.QueryFail('查询失败，请确认vin码'))
 
 
