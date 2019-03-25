@@ -20,8 +20,8 @@ class AssemblyGroups(db.Model):
                 "inner_teething_wheel": self.inner_teething_wheel,
                 "length": self.length,
                 "abs": self.abs,
-                "material_number": self.material_number,
-                "Jx_number": self.Jx_number}
+                "material_number": self.material_number
+                }
 
 
 class VehicleAssemblyGroups(db.Model):

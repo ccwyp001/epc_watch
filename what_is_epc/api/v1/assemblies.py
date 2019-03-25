@@ -37,6 +37,23 @@ class AssemblyGroupsApi(Resource):
                 db.session.close()
 
 
+@api.resource('/jx_number')
+class JxNumberApi(Resource):
+    def get(self):
+        try:
+            arg = request.args['assembly_id']
+            v_list = AssemblyGroups.query.filter(
+                AssemblyGroups.id == arg
+            ).all()
+            return OpSuccess([_.Jx_number for _ in v_list if _.Jx_number])
+        except Exception as e:
+            # print(str(e))
+            return OpException(exceptions.DataValidateError())
+        finally:
+            if 'db' in locals():
+                db.session.close()
+
+
 @api.resource('/oe_numbers')
 class OemApi(Resource):
     def get(self):
@@ -52,6 +69,7 @@ class OemApi(Resource):
         finally:
             if 'db' in locals():
                 db.session.close()
+
 
 @api.resource('/other_numbers')
 class OthmApi(Resource):
@@ -112,6 +130,7 @@ class AssemblyByOemApi(Resource):
             if 'db' in locals():
                 db.session.close()
 
+
 @api.resource('/othm/_search')
 class AssemblyByOthmApi(Resource):
     def get(self):
@@ -148,6 +167,7 @@ class SearchApi(Resource):
         finally:
             if 'db' in locals():
                 db.session.close()
+
 
 @api.resource('/matm/_search')
 class AssemblyByMatmApi(Resource):
