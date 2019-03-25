@@ -10,6 +10,7 @@ class AssemblyGroups(db.Model):
     length = db.Column(db.String(100))
     abs = db.Column(db.String(100))
     material_number = db.Column(db.String(100))
+    Jx_number = db.Column(db.String(100))
 
     def __repr__(self):
         return '<AssemblyGroups %r>' % self.id
@@ -19,7 +20,8 @@ class AssemblyGroups(db.Model):
                 "inner_teething_wheel": self.inner_teething_wheel,
                 "length": self.length,
                 "abs": self.abs,
-                "material_number": self.material_number}
+                "material_number": self.material_number,
+                "Jx_number": self.Jx_number}
 
 
 class VehicleAssemblyGroups(db.Model):

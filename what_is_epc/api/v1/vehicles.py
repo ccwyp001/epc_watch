@@ -20,7 +20,7 @@ api = Api(bp)
 
 VehicleMenu = ['manufacturer', 'brand', 'model', 'displacement', 'years', 'mode']
 AssemblyGMenu = ['outer_teething_wheel', 'inner_teething_wheel', 'length',
-                 'abs', 'material_number']
+                 'abs', 'Jx_number', 'material_number']
 VAGMenu = ['assembly_group_id', 'side', 'oe_numbers', 'other_numbers']
 
 
@@ -38,7 +38,7 @@ def csv_read(csv_file):
         l = ['manufacturer', 'brand', 'model', 'displacement', 'years', 'mode',
              'side', 'oe_numbers', 'other_numbers',
              'assembly_group_id', 'outer_teething_wheel', 'inner_teething_wheel', 'length',
-             'abs', 'material_number']
+             'abs', 'Jx_number', 'material_number']
         n = []
         for line in reader:
             d = dict(zip(l, line))
