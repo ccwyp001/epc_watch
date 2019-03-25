@@ -169,6 +169,24 @@ class SearchApi(Resource):
                 db.session.close()
 
 
+@api.resource('/jxm/_search')
+class AssemblyByJxmApi(Resource):
+    def get(self):
+        try:
+            arg = request.args['q']
+            rule = AssemblyGroups.id.like('%%%s%%' % arg)
+            v_list = AssemblyGroups.query.filter(rule).all()
+            return OpSuccess(
+                [{'Jx_number': _.Jx_number,
+                  'assembly_id': _.id} for _ in v_list])
+        except Exception as e:
+            print(str(e))
+            return OpException(exceptions.DataValidateError())
+        finally:
+            if 'db' in locals():
+                db.session.close()
+
+
 @api.resource('/matm/_search')
 class AssemblyByMatmApi(Resource):
     def get(self):
