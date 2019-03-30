@@ -174,7 +174,7 @@ class AssemblyByJxmApi(Resource):
     def get(self):
         try:
             arg = request.args['q']
-            rule = AssemblyGroups.id.like('%%%s%%' % arg)
+            rule = AssemblyGroups.Jx_number.like('%%%s%%' % arg)
             v_list = AssemblyGroups.query.filter(rule).all()
             return OpSuccess(
                 [{'Jx_number': _.Jx_number,
