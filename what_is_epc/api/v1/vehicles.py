@@ -19,7 +19,7 @@ bp = Blueprint('vehicles', __name__)
 api = Api(bp)
 
 VehicleMenu = ['manufacturer', 'brand', 'model', 'displacement', 'years', 'mode']
-AssemblyGMenu = ['outer_teething_wheel', 'inner_teething_wheel', 'length',
+AssemblyGMenu = ['outer_teething_wheel', 'inner_teething_wheel', 'length', 'circlip',
                  'abs', 'Jx_number', 'material_number']
 VAGMenu = ['assembly_group_id', 'side', 'oe_numbers', 'other_numbers']
 
@@ -38,7 +38,7 @@ def csv_read(csv_file):
         l = ['manufacturer', 'brand', 'model', 'displacement', 'years', 'mode',
              'side', 'oe_numbers', 'other_numbers',
              'assembly_group_id', 'outer_teething_wheel', 'inner_teething_wheel', 'length',
-             'abs', 'Jx_number', 'material_number']
+             'circlip', 'abs', 'Jx_number', 'material_number']
         n = []
         for line in reader:
             d = dict(zip(l, line))
@@ -87,6 +87,9 @@ class VehiclesApi(Resource):
             data_list = csv_read(tmp)
             os.unlink(tmp)
             # step 1 insert vehicles info
+            db.session.execute(Vehicles.__table__.delete())
+            db.session.execute(AssemblyGroups.__table__.delete())
+            db.session.flush()
             db.session.execute(
                 Vehicles.__table__.insert().prefix_with("IGNORE"),
                 [dict([(key, data[key]) for key in VehicleMenu]) for data in data_list]
@@ -96,7 +99,8 @@ class VehiclesApi(Resource):
             db.session.execute(
                 AssemblyGroups.__table__.insert().prefix_with("IGNORE"),
                 [dict(dict([(key, data[key]) for key in AssemblyGMenu]),
-                      **{'id': data['assembly_group_id']}) for data in data_list]
+                      **{'id': data['assembly_group_id'],
+                         'product_type': data['Jx_number'][0]}) for data in data_list]
             )
 
             # step 3 insert relationships info
