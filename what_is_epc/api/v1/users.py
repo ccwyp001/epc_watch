@@ -162,7 +162,7 @@ class UserApi(Resource):
         try:
             data = request.json
             user = Users.query.get(id)
-            jwt_info = get_jwt_identity()
+            jwt_info = json.loads(get_jwt_identity())
             old_password = data['old_pwd']
             new_password = data['new_pwd']
             if id != jwt_info.get('id', 0):

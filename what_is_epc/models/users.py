@@ -11,6 +11,8 @@ class Users(db.Model):
     create_at = db.Column(db.DateTime(), default=datetime.utcnow)
     update_at = db.Column(db.DateTime(), default=datetime.utcnow)
     roles = db.Column(db.Integer, default=1)  # 0x0 reject 0x1 temp 0x2 real 0x4 admin
+    name = db.Column(db.String(100))
+    mobile = db.Column(db.String(20))
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -39,12 +41,19 @@ class Users(db.Model):
         username = json_data.get('username')
         password = json_data.get('password') or '123456'
         password = generate_password_hash(password)
+        name = json_data.get('name', '')
+        mobile = json_data.get('mobile', '')
         return Users(
             username=username,
-            password=password)
+            password=password,
+            name = name,
+            mobile = mobile
+        )
 
     def display(self):
         return {'username': self.username,
                 'roles': self.roles,
-                'id': self.id
+                'id': self.id,
+                'name': self.name,
+                'mobile': self.mobile,
                 }
