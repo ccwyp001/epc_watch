@@ -26,7 +26,8 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-    DEBUG = True
+    DEBUG = False
+    PROPAGATE_EXCEPTIONS = False
     # SQLALCHEMY SETTING
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://onekeeper:onekeeper123@127.0.0.1/epc'
 
