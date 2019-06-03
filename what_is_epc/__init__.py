@@ -46,6 +46,12 @@ def register_blueprints(app, v, package):
 
 def api_errors():
     errors = {
+        'InvalidSignatureError': {
+            'status': 401, 'message': 'Signature verification failed'
+        },
+        'DecodeError': {
+            'status': 401, 'message': 'Not enough segments'
+        },
         'NoAuthorizationError': {
             'status': 403, 'message': 'Missing Authorization Header'},
         'ExpiredSignatureError': {
