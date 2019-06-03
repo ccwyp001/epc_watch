@@ -65,7 +65,8 @@ class Login(Resource):
                 access_token = create_access_token(identity=identity)
                 refresh_token = create_refresh_token(identity=identity)
                 return OpSuccess({"access_token": access_token,
-                                  "refresh_token": refresh_token})
+                                  "refresh_token": refresh_token,
+                                  "id": user.id})
             return OpException(exceptions.AccountLoginFailed())
         except:
             return OpException(exceptions.AccountLoginFailed())
@@ -165,9 +166,13 @@ class UserApi(Resource):
             jwt_info = json.loads(get_jwt_identity())
             old_password = data['old_pwd']
             new_password = data['new_pwd']
-            if id != jwt_info.get('id', 0):
+            if jwt_info.get('roles', 0) & USER_ROLE['ADM']:
+                pass
+            elif id == jwt_info.get('id', 0) and check_password_hash(user.password, old_password):
+                pass
+            else:
                 return OpException(exceptions.InsufficientPrivilege())
-            if user and check_password_hash(user.password, old_password) and new_password:
+            if user and new_password:
                 user.password = generate_password_hash(new_password)
                 user.update_at = datetime.utcnow()
                 db.session.add(user)

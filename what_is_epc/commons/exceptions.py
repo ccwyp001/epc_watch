@@ -94,7 +94,7 @@ class AccountLoginFailed(BaseException):
 class InsufficientPrivilege(BaseException):
     http_code = httpcodes.HTTP_403_FORBIDDEN
     business_code = '101003'
-    message = '账号权限不足'
+    message = '账号权限不足或密码错误'
 
 
 class UserDoesNotExist(BaseException):
