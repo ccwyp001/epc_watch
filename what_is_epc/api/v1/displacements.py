@@ -23,9 +23,11 @@ class DisplacementsApi(Resource):
         try:
             arg1 = request.args['manufacturer']
             arg2 = request.args['models']
+            arg3 = request.args['brand']
             v_list = Vehicles.query.filter(
                 Vehicles.manufacturer == arg1,
-                Vehicles.model == arg2
+                Vehicles.model == arg2,
+                Vehicles.brand == arg3,
             ).all()
             return OpSuccess([_.display() for _ in v_list])
         except Exception as e:

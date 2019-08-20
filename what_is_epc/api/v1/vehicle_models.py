@@ -6,6 +6,7 @@ from ...commons import exceptions
 from . import OpSuccess, OpException
 from ...extensions import db
 from ...models import Vehicles
+
 bp = Blueprint('models', __name__)
 api = Api(bp)
 
@@ -20,13 +21,15 @@ class TestApi(Resource):
 class ModelsApi(Resource):
     def get(self):
         try:
-            arg = request.args['manufacturer']
+            arg1 = request.args['brand']
+            arg2 = request.args['manufacturer']
             r_list = db.session.query(
-                db.distinct(Vehicles.model)).filter(Vehicles.manufacturer == arg).all()
+                db.distinct(Vehicles.model)).filter(
+                Vehicles.brand == arg1,
+                Vehicles.manufacturer == arg2).all()
             return OpSuccess([_[0] for _ in r_list])
         except Exception as e:
             return OpException(exceptions.DataValidateError())
         finally:
             if 'db' in locals():
                 db.session.close()
-
